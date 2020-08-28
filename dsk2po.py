@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # unscramble dsk into po
 # Paul Hagstrom, Dec 2015
-import sys
-import getopt
+import sys, getopt, re
 def main(argv=None):
 	print("dsk2po - convert dsk files to po files")
 
@@ -23,12 +22,12 @@ def main(argv=None):
 		for track in range(35):
 			trackbuffer = dskfile.read(4096)
 			potracks.append(dsk2po(trackbuffer))
-	pofilename = dskfilename + '.po'
+	pofilename = re.sub('\.dsk$', '', dskfilename, flags=re.IGNORECASE) + ".po"
 	print('Writing po image to {}'.format(pofilename))
 	with open(pofilename, mode="wb") as pofile:
 		for potrack in potracks:
 			pofile.write(potrack)
-	return 1
+	return 0
 
 # From Beneath Apple ProDOS, table 3.1
 # block 000 physical 0, 2 DOS 0, E page 0, 1
